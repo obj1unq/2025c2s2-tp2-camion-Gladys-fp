@@ -2,24 +2,35 @@ import transporte.*
 import cosas.*
 
 object camion {
-	const property cosas = #{}
+	const property cosas = #{} 
 	const property tara = 1000 
 		
 	method contieneUn(unaCosa){
 		return cosas.contains(unaCosa)
 	}
-
-	method cargar(unaCosa) {
-		if(not self.contieneUn(unaCosa)){
-			cosas.add(unaCosa)
-		}	
-	}
-
-	method descargar(unaCosa) {
+	method estaCargadoCon(unaCosa){
 		if(self.contieneUn(unaCosa)){
-			cosas.remove(unaCosa)
+			self.error("No se puede cargar una cosa que ya esta cargada")
 		}
 	}
+
+	method noEstaCargadoCon(unaCosa) {
+		if(not self.contieneUn(unaCosa)){
+			self.error("No se puede descargar una cosa que no esta cargada")
+		}
+	}
+
+	method cargar(unaCosa) {
+		self.estaCargadoCon(unaCosa)
+		cosas.add(unaCosa)	
+	}
+
+	method descargar(unaCosa) { 
+		self.noEstaCargadoCon(unaCosa)
+		cosas.remove(unaCosa)
+	}
+
+
 
 	method todoPesoEsPar() {
   		return cosas.all({ cosa => cosa.peso() % 2 == 0 })
@@ -37,7 +48,7 @@ object camion {
 		return self.pesoTotal() > 2500   
 	}
 
-	method tieneNivelDePeligrosidadDe(cantPelogrisidad) {
+	method cantidadDePeligrosidadDe(cantPelogrisidad) {
 	  	return cosas.find({ cosa => cosa.nivelPeligrosidad() == cantPelogrisidad })
 	}
 
@@ -56,6 +67,7 @@ object camion {
 	method cosaQuePesaEntreLosValores(valorMinimo, valorMaximo){
 		return cosas.find({ cosa => cosa.peso() < valorMaximo && cosa.peso() > valorMinimo })
 	}
+	
 
 	method pesoDeLasCosasCargadas() {
 	  return cosas.map({cosa => cosa.peso()})
@@ -71,9 +83,14 @@ object camion {
 	}
 
 	method transportar(destino, camino) {
-  		if (camino.soportaViaje(self)) {
-			destino.descargarCamion(cosas)
-			cosas.clear()
-  		}
+		self.puedeIrAlDestino(camino)
+		destino.descargarCamion(cosas)
+		cosas.clear()
+	}
+
+	method puedeIrAlDestino(camino) {
+	  if(not camino.soportaViaje(self)){
+		self.error("El camino no soporta el viaje")
+		}
 	}
 }

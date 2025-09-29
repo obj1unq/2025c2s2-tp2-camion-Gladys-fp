@@ -1,6 +1,8 @@
 
 import transporte.*
 
+
+//--------------------------KNIGHT RIDER ------------------------------
 object knightRider {
 	method peso() { 
 		return 500 
@@ -17,7 +19,7 @@ object knightRider {
 
 }
 
-
+//------------------------ ARENA A GRANEL -----------------------
 object arenaAGranel {
 	var property peso = 0
 
@@ -39,38 +41,8 @@ object arenaAGranel {
 }
 
 
-object bumblebee {
-	var property tranformacion = "auto"
-	method peso() { 
-		return 800 
-	}
 
-	method cambiarTranformacion(nuevaTranformacion){
-		tranformacion = nuevaTranformacion
-	}
-
-	method nivelPeligrosidad() {
-		if(tranformacion == "auto"){
-			return 15	
-		}else{
-			return 30
-		}  
-	}
-
-	method bultos() {
-	  return 2
-	}
-
-	method efectosPorAccidentes() {
-		if(tranformacion == "auto"){
-			tranformacion = "robot"
-		}else{
-			tranformacion = "auto"
-		}
-	}
-}
-
-
+//------------------------ PAQUETES DE LADRILLOS -----------------------
 object paqueteDeLadrillos {
 	const pesoDeLadrillo = 2
 	var property cantidadDeLadrillos = 0
@@ -100,6 +72,7 @@ object paqueteDeLadrillos {
 		return 3
 	}
 
+
 	method efectosPorAccidentes() {
 		if(cantidadDeLadrillos <= 12){
 			cantidadDeLadrillos = 0
@@ -107,46 +80,48 @@ object paqueteDeLadrillos {
 			cantidadDeLadrillos -= 12
 		}
 	}
-
 }
 
-
+//------------------------ BATERIA ANTIAEREA -----------------------
 object bateriaAntiaerea {
-	var property tieneMisiles = false
+	var property misiles = descargado
 
-	method tieneMisiles(_tieneMisiles){
-		tieneMisiles = _tieneMisiles
+	method misiles(_tieneMisiles){
+		misiles = _tieneMisiles
 	}
 
 	method peso() { 
-		if(tieneMisiles){
-			return 300
-		}else{
-			return 200
-		}
+		misiles.peso()
 	}
 
 	method nivelPeligrosidad() {
-		if(tieneMisiles){
-			return 100
-		}else{
-			return 0
-		}
+		return misiles.nivelPeligrosidad()
 	}
 
 	method bultos() { 
-		if(tieneMisiles){
-			return 2
-		}
-		return 1
+		return misiles.bultos()
 	}
 
 	method efectosPorAccidentes() {
-		tieneMisiles = false  
+		misiles = misiles.efectosPorAccidentes()  
 	}
 }
 
+object cargado {
+	method peso() {return 300}
+	method nivelPeligrosidad() {return 100}
+	method bultos() {return 2}
+	method efectosPorAccidentes() {return descargado}
+  
+}
+object descargado {
+	method peso() {return 200}
+	method nivelPeligrosidad() {return 0}
+	method bultos() {return 1}
+	method efectosPorAccidentes() {return self}
+}
 
+//------------------------- RESIDUOS RADIACTIVOS -----------------------
 object residuosRadiactivos {
 	var property peso = 0
 
@@ -167,6 +142,44 @@ object residuosRadiactivos {
 	}
 }
 
+//------------------------ BUMBLEBEE -----------------------
+object bumblebee {
+	var tranformacion = auto
+
+	method peso() { 
+		return 800 
+	}
+	method tranformacion() {
+	  return tranformacion
+	}
+
+	method tranformarEn(nuevaTranformacion){
+		tranformacion = nuevaTranformacion
+	}
+
+	method nivelPeligrosidad() {
+		return tranformacion.nivelPeligrosidad()
+	}
+
+	method bultos() {
+	  return 2
+	}
+
+	method efectosPorAccidentes() {
+		tranformacion = tranformacion.efectosPorAccidentes()
+	}
+}
+
+object auto {
+	method nivelPeligrosidad() {return 15}
+	method efectosPorAccidentes() { return robot}
+}
+object robot {
+	method nivelPeligrosidad() {return 30}
+	method efectosPorAccidentes() {return auto}
+}
+
+//---------------CONTENEDOR Y EMBALAJE------------------
 
 object contenedorPortuario {
   	const property cosasContenidas = #{}
@@ -200,6 +213,9 @@ object contenedorPortuario {
 		cosasContenidas.forEach({cosa => cosa.efectosPorAccidentes()})
 	}
 }
+
+
+
 
 object embalajeDeSeguridad {
   	var cosaAEmbalar = null
