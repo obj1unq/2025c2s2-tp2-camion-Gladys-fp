@@ -30,8 +30,6 @@ object camion {
 		cosas.remove(unaCosa)
 	}
 
-
-
 	method todoPesoEsPar() {
   		return cosas.all({ cosa => cosa.peso() % 2 == 0 })
 	}
@@ -68,7 +66,6 @@ object camion {
 		return cosas.find({ cosa => cosa.peso() < valorMaximo && cosa.peso() > valorMinimo })
 	}
 	
-
 	method pesoDeLasCosasCargadas() {
 	  return cosas.map({cosa => cosa.peso()})
 	}

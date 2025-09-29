@@ -215,8 +215,6 @@ object contenedorPortuario {
 }
 
 
-
-
 object embalajeDeSeguridad {
   	var cosaAEmbalar = null
 	

@@ -1,9 +1,6 @@
 import camion.*
 import cosas.*
 
-
-
-//   usar assert.that para comparar con verdadero
 object almacen {
     const property cosasAlmacenadas = #{} 
 
